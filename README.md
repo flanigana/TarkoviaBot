@@ -45,25 +45,31 @@ Using Tarkovia Bot in your own server is as easy as clicking [here](https://disc
 
 
 ## Usage Examples
-Basic search
+* Basic search
+
 ![Basic search](https://i.imgur.com/hoIhiPO.png)
 
-Search in category
+* Search in category
+
 ![Search by category](https://i.imgur.com/lpSnh37.png)
 
-Basic find (Chest Rig)
+* Basic find (Chest Rig)
+
 ![Basic find (Chest Rig)](https://i.imgur.com/8UHnkYR.png)
 
-Basic find (Map)
+* Basic find (Map)
+
 ![Basic find (Map)](https://i.imgur.com/kH2GPNp.png)
 
-Basic find (Quest)
+* Basic find (Quest)
+
 ![Basic find (Quest)](https://i.imgur.com/LixA42g.png)
 
-Find in category
+* Find in category
 
 ![Find in category](https://i.imgur.com/jQGvmgz.png)
 
-Find in category without query
-This can be done with search as well
+* Find in category without query
+  * This can be done with search as well
+
 ![Find in category without query](https://i.imgur.com/D14oUvQ.png)
