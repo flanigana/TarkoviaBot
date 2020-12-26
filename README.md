@@ -26,43 +26,43 @@ Using Tarkovia Bot in your own server is as easy as clicking [here](https://disc
   ```sh
     -find:chosen_category query
     ```
-* Retrieve an [image](https://i.imgur.com/ti2Ax5A.png) containing the best keys for loot for each map (from Pestily)
-  ```sh
-    -keys
-    ```
-* Retrieve a link to [ascheron's interactive ammo chart](https://tarkov.ascheron.dev/)
+* Retrieve a [link](https://tarkov.ascheron.dev/) to ascheron's interactive ammo chart
   ```sh
     -ammo
     ```
-* Retrieve a link to [the wiki's "Quests" page](https://escapefromtarkov.gamepedia.com/Quests)
+* Retrieve a [link](https://escapefromtarkov.gamepedia.com/Quests) to the wiki's "Quests" page
   ```sh
     -quests
     ```
-* Retrieve the most recent [image](https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/19/QuestItemRequirements.png/revision/latest) containing all the required quest items
+* Retrieve an [image](https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/19/QuestItemRequirements.png/revision/latest) containing all the required quest items
   ```sh
     -questitems
+    ```
+* Retrieve an [image](https://i.imgur.com/ti2Ax5A.png) containing the best keys for loot for each map (from Pestily)
+  ```sh
+    -keys
     ```
 
 
 ## Usage Examples
 * Basic search
-![Basic search](https://imgur.com/hoIhiPO)
+![Basic search](https://i.imgur.com/hoIhiPO.png)
 
 * Search in category
-![Search by category](https://imgur.com/lpSnh37)
+![Search by category](https://i.imgur.com/lpSnh37.png)
 
 * Basic find (Chest Rig)
-![Basic find (Chest Rig)](https://imgur.com/8UHnkYR)
+![Basic find (Chest Rig)](https://i.imgur.com/8UHnkYR.png)
 
 * Basic find (Map)
-![Basic find (Map)](https://imgur.com/kH2GPNp)
+![Basic find (Map)](https://i.imgur.com/kH2GPNp.png)
 
 * Basic find (Quest)
-![Basic find (Quest)](https://imgur.com/LixA42g)
+![Basic find (Quest)](https://i.imgur.com/LixA42g.png)
 
 * Find in category
-![Find in category](https://imgur.com/jQGvmgz)
+![Find in category](https://i.imgur.com/jQGvmgz.png)
 
 * Find in category without query
   * This can be done with search as well
-![Find in category without query](https://imgur.com/D14oUvQ)
+![Find in category without query](https://i.imgur.com/D14oUvQ.png)
