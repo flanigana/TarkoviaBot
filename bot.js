@@ -1,4 +1,4 @@
-const config = require('./config.json');
+require("dotenv").config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
@@ -56,7 +56,7 @@ client.once('ready', async () => {
 });
 
 client.on('message', async msg => {
-    if (!msg.content.startsWith(config.prefix)) {
+    if (!msg.content.startsWith('-')) {
         return;
     }
 
@@ -85,23 +85,23 @@ client.on('message', async msg => {
         case 'key_list':
         case 'keyslist':
         case 'keys_list':
-            response = config.keys;
+            response = "https://i.imgur.com/ti2Ax5A.png";
             break;
         case 'ammo':
         case 'ammochart':
         case 'ammo_chart':
-            response = config.ammo;
+            response = "https://tarkov.ascheron.dev";
             break;
         case 'quests':
         case 'questlist':
         case 'quest_list':
-            response = config.quests;
+            response = "https://escapefromtarkov.gamepedia.com/Quests";
             break;
         case 'questitems':
         case 'quest_items':
         case 'questitem':
         case 'quest_item':
-            response = config.questItems;
+            response = "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/19/QuestItemRequirements.png/revision/latest";
             break;
     }
     
@@ -113,4 +113,4 @@ client.on('message', async msg => {
     }
 });
 
-client.login(config.discordToken);
+client.login(process.env.discordToken);
