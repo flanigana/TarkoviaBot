@@ -1,0 +1,19 @@
+{
+  "name": "tarkovia",
+  "version": "1.0.0",
+  "description": "A Discord bot to assist with playing Tarkov",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node bot.js"
+  },
+  "author": "flanigana",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.5",
+    "discord.js": "^12.5.1",
+    "fastest-levenshtein": "^1.0.12",
+    "string-similarity": "^4.0.3",
+    "wikijs": "^6.0.1"
+  }
+}
