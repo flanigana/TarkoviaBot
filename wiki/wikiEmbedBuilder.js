@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const cheerio = require('cheerio');
 
-addEmbedFieldsFromInfo = (embed, info) => {
+function addEmbedFieldsFromInfo(embed, info) {
     const keys = Object.keys(info);
     for (const key of keys) {
         if (key.match(/image|isQuest/gi)) {
@@ -17,9 +17,9 @@ addEmbedFieldsFromInfo = (embed, info) => {
         }
     }
     return embed;
-};
+}
 
-addImageMatchingRegex = async (page, embed, regex) => {
+async function addImageMatchingRegex(page, embed, regex) {
     return page.images().then(images => {
         for (const image of images) {
             if (regex.test(image)) {
@@ -29,25 +29,24 @@ addImageMatchingRegex = async (page, embed, regex) => {
         }
         return embed;
     }).catch(console.error);
-};
+}
 
-getLocationMap = ($, info) => {
+function getLocationMap($, info) {
+    let map = new Map();
+    map.set('The Lab', 'lab');
     const ps = $('p');
     for (const p of ps) {
         const label = $('b', p).text();
-        if (label.match(/interactive map/gi)) {
-            info['Interactive Map'] = `https://escapefromtarkov.gamepedia.com${$('a', p).attr('href')}`;
-        }
         if (label.match(/2D Map|3D Map|expansion/gi)) {
             info.Image = $('a > img', p).attr('src');
             break;
         }
     }
     return info;
-};
+}
 
-getQuestData = ($, info) => {
-    getInnerText = e => {
+function getQuestData($, info) {
+    function getInnerText(e) {
         if (e.type == 'text') {
             return e.data;
         } else {
@@ -57,7 +56,7 @@ getQuestData = ($, info) => {
             }
             return bullet;
         }
-    };
+    }
 
     const elements = $('h2,li');
     let section;
@@ -87,9 +86,9 @@ getQuestData = ($, info) => {
         bullets = [];
     }
     return info;
-};
+}
 
-getMainTableInfo = $ => {
+function getMainTableInfo($) {
     let info = {};
     const mainTableRow = $('#va-infobox0-content > .va-infobox-cont > .va-infobox-group > tbody > tr');
     for (const row of mainTableRow) {
@@ -121,9 +120,9 @@ getMainTableInfo = $ => {
         }
     }
     return info;
-};
+}
 
-getPageInfo =  async page => {
+async function getPageInfo(page) {
     return page.html().then(html => {
         const $ = cheerio.load(html);
         let info = getMainTableInfo($);
@@ -131,16 +130,23 @@ getPageInfo =  async page => {
             info = getQuestData($, info);
             info['Guide'] = `${page.raw.fullurl}#Guide`;
         } 
-        if (info.Type && info.Type.match(/location/gi)) {
+        if (page.raw.title.match(/customs|woods|factory|interchange|shoreline|reserve|the lab|labs|lab/gi)) {
             info = getLocationMap($, info);
-            info['For More Maps'] = `${page.raw.fullurl}#Maps`;
+            let interactiveLinkEnd;
+            if (page.raw.title.match(/the lab|labs|lab/)) {
+                interactiveLinkEnd = 'lab';
+            } else {
+                interactiveLinkEnd = page.raw.title.toLowerCase();
+            }
+            info['Interactive Map Available'] = `[Here](https://mapgenie.io/tarkov/maps/${interactiveLinkEnd})`;
+            info['More Maps Available'] = `[Here](${page.raw.fullurl}#Maps)`;
         }
 
         return info;
     });
-};
+}
 
-addDefaultPageInfo = async (embed, page) => {
+async function addDefaultPageInfo(embed, page) {
     let promises = [];    
     promises.push(page.mainImage().then(image => {
         embed = embed.setThumbnail(image);
@@ -151,13 +157,19 @@ addDefaultPageInfo = async (embed, page) => {
     return Promise.all(promises).then(() => {
         return embed;
     }).catch(console.error);
-};
+}
 
-module.exports.buildEmbedFromPage = async page => {
+function setFooter(embed) {
+    return embed.setTimestamp()
+        .setFooter('Source: escapefromtarkov.gamepedia.com');
+}
+
+async function buildEmbedFromPage(page) {
     let promises = [];
     let embed = new Discord.MessageEmbed()
         .setTitle(page.raw.title)
         .setURL(page.raw.fullurl);
+    embed = setFooter(embed);
 
     promises.push(addDefaultPageInfo(embed, page));
     promises.push(getPageInfo(page).then(info => {
@@ -178,13 +190,14 @@ module.exports.buildEmbedFromPage = async page => {
     return Promise.all(promises).then(() => {
         return embed;
     }).catch(console.error);
-};
+}
 
-module.exports.buildEmbedFromSearch = async (searchRes, cat) => {
+async function buildEmbedFromSearch(searchRes, cat) {
     const title = `Top Search Results${cat ? (' in ' + cat) : ''}:`;
     let embed =  new Discord.MessageEmbed()
         .setTitle(title)
         .setThumbnail('https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/bc/Wiki.png/revision/latest/scale-to-width-down/320?cb=20200612143203');
+    embed = setFooter(embed);
 
     let description = '';
     for (let i=0; i<searchRes.length && i<10; ++i) {
@@ -192,4 +205,9 @@ module.exports.buildEmbedFromSearch = async (searchRes, cat) => {
     }
 
     return embed.setDescription(description);
+}
+
+module.exports = {
+    buildEmbedFromPage,
+    buildEmbedFromSearch
 };

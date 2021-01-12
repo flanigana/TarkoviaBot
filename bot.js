@@ -8,28 +8,26 @@ const wiki = defaultWiki({
 });
 
 const tools = require('./tools/tools');
-const wikiController = require('./wiki/wiki');
+const { TarkovWiki } = require('./wiki/tarkovWiki');
 
-let pageTitles = [];
-let pagesByCategory = {};
+let tarkovWiki;
 
-loadCategoryPages = async () => {
-
-    getFilteredCategories = async () => {
+async function loadCategoryPages() {
+    async function getFilteredCategories() {
         const ignore = RegExp('(icons|images|templates|deletion).?$', 'gi');
         return wiki.allCategories().then(categories => {
             return categories.filter(cat => {return !ignore.test(cat);});
         });
-    };
-
-    getFilteredPages = pages => {
+    }
+    function getFilteredPages(pages) {
         return pages.filter(page => {
             return !page.toLowerCase().startsWith("category:");
         });
-    };
+    }
 
     const categories = await getFilteredCategories();
     let promises = [];
+    let pagesByCategory = {};
     for (const cat of categories) {
         promises.push(wiki.pagesInCategory('Category:'+cat).then(pages => {
             const filteredPages = getFilteredPages(pages);
@@ -41,18 +39,27 @@ loadCategoryPages = async () => {
     }
 
     return Promise.all(promises).then(() => {
-        return true;
+        return pagesByCategory;
     }).catch(console.error);
-};
+}
+
+async function initialize() {
+    let promises = [];
+    let pageTitles = [];
+    let pagesByCategory = {};
+    promises.push(wiki.allPages().then(pages => {pageTitles = pages; return true;}));
+    promises.push(loadCategoryPages().then(pages => {pagesByCategory = pages; return true;}));
+
+    return Promise.all(promises).then(() => {
+        return new TarkovWiki(wiki, pageTitles, pagesByCategory);
+    }).catch(console.error);
+}
 
 client.once('ready', async () => {
-    let promises = [];
-    promises.push(wiki.allPages().then(pages => { pageTitles = pages; return true;}));
-    promises.push(loadCategoryPages());
-
-    Promise.all(promises).then(() => {
+    initialize().then(tarkov => {
+        tarkovWiki = tarkov;
         console.log('Ready!');
-    }).catch(console.error);
+    });
 });
 
 client.on('message', async msg => {
@@ -68,16 +75,16 @@ client.on('message', async msg => {
     switch (command) {
         case 'search':
             if (subCommand) {
-                embed = await wikiController.searchInCategory(wiki, pagesByCategory, subCommand, msg.content);
+                embed = await tarkovWiki.searchInCategory(msg.content, subCommand);
             } else {
-                embed = await wikiController.search(wiki, msg.content);
+                embed = await tarkovWiki.search(msg.content);
             }
             break;
         case 'find':
             if (subCommand) {
-                embed = await wikiController.findPageInCategory(wiki, pagesByCategory, subCommand, msg.content);
+                embed = await tarkovWiki.findPageInCategory(msg.content, subCommand);
             } else {
-                embed = await wikiController.findPage(wiki, pageTitles, msg.content);
+                embed = await tarkovWiki.findPage(msg.content);
             }
             break;
         case 'keys':
