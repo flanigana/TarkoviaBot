@@ -4,7 +4,7 @@ const client = new Discord.Client();
 
 const defaultWiki = require('wikijs').default;
 const wiki = defaultWiki({
-	apiUrl: 'https://escapefromtarkov.gamepedia.com/api.php',
+	apiUrl: 'https://escapefromtarkov.fandom.com/api.php',
 });
 
 const tools = require('./tools/tools');

@@ -181,7 +181,7 @@ async function addDefaultPageInfo(embed, page) {
 }
 
 function setFooter(embed) {
-	return embed.setTimestamp().setFooter('Source: escapefromtarkov.gamepedia.com');
+	return embed.setTimestamp().setFooter('Source: escapefromtarkov.fandom.com');
 }
 
 async function buildEmbedFromPage(page) {
