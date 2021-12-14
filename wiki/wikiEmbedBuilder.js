@@ -35,22 +35,27 @@ async function addImageMatchingRegex(page, embed, regex) {
 }
 
 function getLocationMap($, info) {
-	info.Image = findMapImage($, /expansion/gi) || findMapImage($, /2D Map|3D Map/gi) || findMapImage($, /map/gi);
-
-	return info;
-}
-
-function findMapImage($, regex) {
-	const ps = $('p');
-	for (const p of ps) {
-		const label = $('b', p).text();
-		if (label.match(regex)) {
-			const imageSrc = $('a > img', p)?.attr('data-src');
-			if (imageSrc) {
-				return imageSrc;
+	outerLoop: for (const h of $('h2')) {
+		if ($('span', h)?.text()?.startsWith('Maps')) {
+			let nextEle = h.next.next;
+			while (nextEle && nextEle.name != 'table' && nextEle.name != 'h2') {
+				if (!nextEle.name) {
+					nextEle = nextEle.next;
+					continue;
+				}
+				const image = $('a > img', nextEle);
+				if (image) {
+					const imageSrc = image.attr('data-src');
+					if (imageSrc) {
+						info.Image = imageSrc;
+						break outerLoop;
+					}
+				}
+				nextEle = nextEle.next;
 			}
 		}
 	}
+	return info;
 }
 
 function getQuestData($, info) {
